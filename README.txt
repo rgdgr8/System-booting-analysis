@@ -36,8 +36,8 @@ Output (JSON):
             average_latency_seconds: Average latency in seconds
             median_latency_seconds: Median latency in seconds
             stddev_latency_seconds: Latency standard deviation in seconds
-            max_latency_seconds: Maximum latency
-            min_latency_seconds: Minimum latency
+            max_latency_seconds: Maximum latency in seconds
+            min_latency_seconds: Minimum latency in seconds
         }
     }
 }
