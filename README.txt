@@ -22,7 +22,7 @@ Prerequisites:
 2. SSH target should already trust the client (i.e. should already have the public key of the client stored)
 
 Output (JSON):
-```
+
 {
     hostname: IP address of the SSH target machine
     username: Username of the SSH target machine's user
@@ -42,7 +42,7 @@ Output (JSON):
         }
     }
 }
-```
+
 * Details of a service:
     service_name: Name of the service
     inactive_exit_timestamp: Monotonic machine timestamp in microseconds for when the service exited inactive state
