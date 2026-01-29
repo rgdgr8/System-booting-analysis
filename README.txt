@@ -1,12 +1,11 @@
-Installation instructions:
+Installation and Execution instructions:
 
-1. Go into folder time-to-execstart-analyzer
-2. Run commands in terminal
+1. Run commands in terminal
     - python3 -m venv venv
     - source venv/bin/activate
     - pip install .
-3. Run the program with the following command in terminal
-    - time-to-execstart-analyzer.py [-h] [--username USERNAME] [--out-file OUT_FILE] hostname key
+2. Run the program with the following command in terminal
+    - time-to-execstart-analyzer [-h] [--username USERNAME] [--out-file OUT_FILE] hostname key
     
     * Positional Arguments:
         • hostname: hostname or IP to connect to
@@ -44,11 +43,14 @@ Output (JSON):
 }
 
 * Details of a service:
+
+{
     service_name: Name of the service
     inactive_exit_timestamp: Monotonic machine timestamp in microseconds for when the service exited inactive state
     execstart_timestamp: Monotonic machine timestamp in microseconds for when the ExecStart command was executed for the service
-    activation_latency_seconds: Latency between exiting inactive state and execution of execstart command in seconds
+    activation_latency_seconds: Latency between exiting inactive state and execution of Execstart command in seconds
     activation_phase: Describes whether the service activated only before the boot completion or after the boot completion
+}
 
 Functional description of the code:
 
@@ -78,6 +80,6 @@ Edge cases and Assumptions:
 
 1. Services which have inactive_exit_timestamp > execstart_timestamp are being ignored even if they have been activated, since there is no method to calculate the required time interval for these services.
 
-2. systemd-analyze userspace time has been assumed to be the boot completion time because the other alternative timestamp which can be acquired using the command 'systemctl show default.target -p ActiveEnterTimestampMonotonic' is not reliable if default.target service is restarted.
+2. systemd-analyze userspace time has been assumed to be the boot completion time because any other alternative for example the timestamp which can be acquired using the command 'systemctl show default.target -p ActiveEnterTimestampMonotonic' is not reliable if default.target service is restarted.
 
 3. Only the most recent run of each service has been considered for our analysis because getting information about previous/intial run requires historical data which is not available with systemctl and using journal-based event reconstruction (e.g. using journald) is not reliable due to potential inaccuracies and journal refresh.
