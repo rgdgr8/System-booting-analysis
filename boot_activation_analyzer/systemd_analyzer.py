@@ -82,8 +82,9 @@ def compute_summary(results: List[ServiceEntry]) -> SummaryStatistics:
     """
     if not results:
         return SummaryStatistics(
-            total_services=0,
             average_latency_seconds=None,
+            median_latency_seconds=None,
+            stddev_latency_seconds=None,
             max_latency_seconds=None,
             min_latency_seconds=None,
         )
@@ -91,8 +92,9 @@ def compute_summary(results: List[ServiceEntry]) -> SummaryStatistics:
     latencies = [r.activation_latency_seconds for r in results]
 
     return SummaryStatistics(
-        total_services=len(latencies),
         average_latency_seconds=statistics.mean(latencies),
+        median_latency_seconds=statistics.median(latencies),
+        stddev_latency_seconds=0.0 if len(latencies) < 2 else statistics.stdev(latencies),
         max_latency_seconds=max(latencies),
         min_latency_seconds=min(latencies),
     )
@@ -120,8 +122,8 @@ def analyze_boot_activation(
     """
     Perform complete activation analysis.
     Includes:
-    - Services activated only during initial boot phase
-    - Services activated later during runtime (post-boot)
+    - Services activated only before the boot completion
+    - Services activated after the boot completion (post-boot)
     """
     # Get boot completion boundary
     boot_boundary_us = get_boot_userspace_time_us(ssh_client)
@@ -139,10 +141,10 @@ def analyze_boot_activation(
             continue
 
         if timing.inactive_exit_timestamp <= boot_boundary_us:
-            timing.activation_phase = "Activated only during initial boot phase"
+            timing.activation_phase = "Activated only before the boot completion"
             num_boot_phase += 1
         else:
-            timing.activation_phase = "Activated later during runtime"
+            timing.activation_phase = "Activated after the boot completion"
             num_runtime += 1
 
         results.append(timing)

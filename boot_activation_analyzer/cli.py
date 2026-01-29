@@ -22,7 +22,7 @@ def main() -> None:
 
     parser.add_argument(
         "--username",
-        help="SSH username (defaults to current local user)",
+        help="SSH target username (defaults to current local user)",
     )
 
     parser.add_argument(

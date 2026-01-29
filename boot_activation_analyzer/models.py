@@ -16,8 +16,9 @@ class ServiceEntry(BaseModel):
 class SummaryStatistics(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    total_services: int
     average_latency_seconds: Optional[float]
+    median_latency_seconds: Optional[float]
+    stddev_latency_seconds: Optional[float]
     max_latency_seconds: Optional[float]
     min_latency_seconds: Optional[float]
 
